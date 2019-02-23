@@ -179,6 +179,52 @@
 			}
 		</script>
 	</head>
+    <script>
+        
+        function copyText(text) {
+            var container = document.body;
+            
+            var isRTL = document.documentElement.getAttribute("dir") == "rtl";
+            
+            var copyDom = document.getElementsByClassName("copyDom");
+            if (copyDom && copyDom.length > 0) {
+                container.removeChild(copyDom[0]);
+            }
+            var fakeElem = document.createElement("textarea");
+            // Prevent zooming on iOS
+            fakeElem.style.fontSize = "12pt";
+            // Reset box model
+            fakeElem.style.border = "0";
+            fakeElem.style.padding = "0";
+            fakeElem.style.margin = "0";
+            // Move element out of screen horizontally
+            fakeElem.style.position = "absolute";
+            fakeElem.style[isRTL ? "right" : "left"] = "-9999px";
+            // Move element to the same position vertically
+            var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+            fakeElem.style.top = yPosition + "px";
+            
+            fakeElem.setAttribute("readonly", "");
+            fakeElem.className = "copyDom";
+            fakeElem.value = text;
+            container.appendChild(fakeElem);
+            fakeElem.select();
+            fakeElem.setSelectionRange(0, fakeElem.value.length);
+            
+            window.selectedText = fakeElem.value;
+            var succeeded = void 0;
+            
+            try {
+                succeeded = document.execCommand("copy");
+            } catch (err) {
+                succeeded = false;
+            }
+            return succeeded;
+        }
+    
+    </script>
+    
+    
 	<body>
 		<div class="container" id="provision_info">
 			<div class="header __DEBUG__">
@@ -206,6 +252,7 @@
 			<div class="section" id="team">
 				<div class="label">Team Name and ID</div>
 				<div class="item" id="team_name">__TeamName__ (__TeamIds__)</div>
+                <a class="detail" href="" onclick="copyText('__TeamName__ (__TeamIds__)')">&nbsp; Copy Text</a>
 				<div class="detail">Check <a href="https://developer.apple.com/membercenter/index.action#accountSummary">Your Account in Member Center</a></div>
 			</div>
 			<div class="section" id="app">
@@ -244,7 +291,8 @@
 
 		<div class="container" id="entitlements">
 			<div class="header">
-				<div class="label">Entitlements</div>
+				<div class="item">Entitlements</div>
+                <div class="detail"> <a href="#toggle" onclick="copyText('__ApplicationIdentifier__')" id="toggle_button">Copy Idenfifier</a></div>
 			</div>
 			<div class="section">
 				<div class="data">__EntitlementsFormatted__</div>

@@ -206,6 +206,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
 						synthesizedValue = [NSString stringWithFormat:@"<pre>%@</pre>", dictionaryFormatted];
 						
 						[synthesizedInfo setObject:synthesizedValue forKey:@"EntitlementsFormatted"];
+                        [synthesizedInfo setObject:dictionary[@"application-identifier"] forKey:@"ApplicationIdentifier"];
 					}
 					else {
 						[synthesizedInfo setObject:@"No Entitlements" forKey:@"EntitlementsFormatted"];
